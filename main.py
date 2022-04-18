@@ -22,18 +22,7 @@ def create_main_window():
             sg.Button('Delete', key='-DELETE-', expand_x=True),
         ],
     ]
-    main_window = sg.Window('Phone Book', layout)
-    while True:
-        event, values = main_window.read()
-        if event == sg.WIN_CLOSED:
-            break
-        if event == '-ADD-':
-            create_add_edit_windows('Add Contact')
-        if event == '-EDIT-':
-            create_add_edit_windows('Edit Contact')
-        if event == '-DELETE-':
-            print(event)
-    main_window.close()
+    return sg.Window('Phone Book', layout, finalize=True)
 
 
 def create_add_edit_windows(title):
@@ -43,13 +32,31 @@ def create_add_edit_windows(title):
         [sg.Text('Number:'), sg.Input()],
         [sg.Button('Save', key='-SAVE-')],
     ]
-    window = sg.Window(title, layout)
+    return sg.Window(title, layout, finalize=True)
+
+
+def main():
+    main_window = create_main_window()
+    add_edit_window = None
     while True:
-        event_sub, values_sub = window.read()
-        if event_sub == sg.WIN_CLOSED:
+        window, event, values = sg.read_all_windows()
+        if event == sg.WIN_CLOSED and window == main_window:
             break
-    window.close()
+
+        if event == '-ADD-' and not window == add_edit_window:
+            add_edit_window = create_add_edit_windows('Add Contact')
+        elif event == '-EDIT-' and not window == add_edit_window:
+            add_edit_window = create_add_edit_windows('Edit Contact')
+        elif event == '-DELETE-':
+            print(event)
+
+        if event == sg.WIN_CLOSED and window == add_edit_window:
+            add_edit_window.close()
+            add_edit_window = None
+    main_window.close()
+    if add_edit_window is not None:
+        add_edit_window.close()
 
 
 if __name__ == '__main__':
-    create_main_window()
+    main()
