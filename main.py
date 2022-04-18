@@ -20,15 +20,36 @@ def create_main_window():
             sg.Button('Add', key='-ADD-', expand_x=True),
             sg.Button('Edit', key='-EDIT-', expand_x=True),
             sg.Button('Delete', key='-DELETE-', expand_x=True),
-         ],
+        ],
     ]
+    main_window = sg.Window('Phone Book', layout)
+    while True:
+        event, values = main_window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        if event == '-ADD-':
+            create_add_edit_windows('Add Contact')
+        if event == '-EDIT-':
+            create_add_edit_windows('Edit Contact')
+        if event == '-DELETE-':
+            print(event)
+    main_window.close()
 
-    return sg.Window('Phone Book', layout)
+
+def create_add_edit_windows(title):
+    layout = [
+        [sg.Text('Name:'), sg.Input()],
+        [sg.Text('Surname:'), sg.Input()],
+        [sg.Text('Number:'), sg.Input()],
+        [sg.Button('Save', key='-SAVE-')],
+    ]
+    window = sg.Window(title, layout)
+    while True:
+        event_sub, values_sub = window.read()
+        if event_sub == sg.WIN_CLOSED:
+            break
+    window.close()
 
 
-main_window = create_main_window()
-
-while True:
-    event, values = main_window.read()
-    if event == sg.WIN_CLOSED:
-        break
+if __name__ == '__main__':
+    create_main_window()
