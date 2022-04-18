@@ -42,10 +42,10 @@ def main():
         window, event, values = sg.read_all_windows()
         if event == sg.WIN_CLOSED and window == main_window:
             break
-
-        if event == '-ADD-' and not window == add_edit_window:
+        # main window action
+        if event == '-ADD-' and not add_edit_window:
             add_edit_window = create_add_edit_windows('Add Contact')
-        elif event == '-EDIT-' and not window == add_edit_window:
+        elif event == '-EDIT-' and not add_edit_window:
             add_edit_window = create_add_edit_windows('Edit Contact')
         elif event == '-DELETE-':
             print(event)
