@@ -8,7 +8,7 @@ def make_table():
         with open('contacts.csv', mode='r', encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file)
             for row in csv_reader:
-                data.append([row['name'], row['surname'], row['number']])
+                data.append([str(row['name']).title(), str(row['surname']).title(), row['number']])
         return data
     except Exception as ex:
         print(ex)
@@ -90,12 +90,14 @@ def main():
 
         if event == '-EDIT-' and not edit_window and not add_window and data_selected:
             edit_window = create_edit_window()
-            edit_window['-EDIT_NAME-'].update(str(data_selected[0][0]).title())
-            edit_window['-EDIT_SURNAME-'].update(str(data_selected[0][1]).title())
+            edit_window['-EDIT_NAME-'].update(data_selected[0][0])
+            edit_window['-EDIT_SURNAME-'].update(data_selected[0][1])
             edit_window['-EDIT_NUMBER-'].update(data_selected[0][2])
 
-        if event == '-DELETE-':
-            print(event)
+        if event == '-DELETE-' and window == main_window and data_selected:
+            del data_values[data_row]
+            save_table(data_values)
+            main_window['-TABLE-'].update(values=data_values)
 
         if event == '-TABLE-':
             data_selected = [data_values[row] for row in values[event]]
