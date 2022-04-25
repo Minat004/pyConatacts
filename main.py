@@ -29,7 +29,7 @@ def create_main_window(data, head):
         [sg.Input(key='-IN_BROWSE-'), sg.Button('Browse', key='-BROWSE-', expand_x=True)],
         [
             sg.Input(enable_events=True, key='-IN_SEARCH-'),
-            sg.Combo(head, default_value='Name'),
+            sg.Combo(head, default_value='Name', key='-COMBO-'),
             # sg.Button('Search', key='-SEARCH-')
         ],
         [sg.Table(values=data,
@@ -112,10 +112,17 @@ def main():
 
             elif event == '-BROWSE-':
                 print(event)
+                print(values['-COMBO-'])
 
             if values['-IN_SEARCH-'] != '' and event != '-TABLE-':
                 search = str(values['-IN_SEARCH-']).lower()
-                search_values = [search_row for search_row in data_values if search in str(search_row[0]).lower()]
+                if values['-COMBO-'] == 'Name':
+                    search_values = [search_row for search_row in data_values if search in str(search_row[0]).lower()]
+                elif values['-COMBO-'] == 'Surname':
+                    search_values = [search_row for search_row in data_values if search in str(search_row[1]).lower()]
+                elif values['-COMBO-'] == 'Number':
+                    search_values = [search_row for search_row in data_values if search in str(search_row[2]).lower()]
+
                 main_window['-TABLE-'].update(values=search_values)
             elif event != '-TABLE-':
                 search_values = []
